@@ -13,13 +13,11 @@ Current Capabilities:
 - Efficiently compresses high-dimensional brain images into a compact latent representation.
 - Reconstructs images from the latent space, maintaining essential details for medical analysis.
 
-Future Integration:
-- Anomaly detection will be added to identify irregularities in brain images by comparing latent representations
-  against a normative model derived from healthy images.
-- A healing process will be integrated, adjusting the latent representations of detected anomalies to match those
-  of healthy tissue before reconstruction, allowing the model to "heal" the images by replacing anomalous regions 
-  with normal brain tissue patterns. This will be accomplished through further model training and the development 
-  of algorithms to adjust the latent space based on the characteristics of healthy images.
+Proposed Use:
+- A healing process can be integrated, with the model deconstructing the image and then changing the latent representations 
+  of detected anomalies to match those of healthy tissue before reconstruction, allowing the model to "heal" the images by 
+  replacing anomalous regions with normal brain tissue patterns. This will be accomplished through further model training 
+  and the development of algorithms to adjust the latent space based on the characteristics of healthy images.
 """
 
 class VectorQuantizer(nn.Module):

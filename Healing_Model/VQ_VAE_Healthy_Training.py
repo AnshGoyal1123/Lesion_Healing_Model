@@ -7,7 +7,7 @@ from CTDataset import StrokeAI  # Ensure this is the correct path to your Stroke
 dataset = StrokeAI(
     CT_root="../Dataset/data/images/",
     DWI_root="/scratch4/rsteven1/StrokeAI/CTMRI_coreistration",
-    ADC_root="/scratch4/rsteven1/StrokeAI/",
+    ADC_root="/scratch4/rsteven1/StrokeAI/CTMRI_coreistration",
     label_root="/scratch4/rsteven1/StrokeAI/CTMRI_coreistration",
     MRI_type='DWI',
     mode='train',  # Ensure this filters for healthy images only
