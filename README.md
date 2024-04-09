@@ -10,3 +10,5 @@ The purpose behind the project is to create a deep learning model that can relia
 This repository represents an offshoot of the original project which takes a new approach. Rather than directly scanning each voxel for lesions and comparing to a ground truth MRI scan, this approach, inspired the paper "Fast Unsupervised Brain Anomaly Detection and Segmentation with Diffusion Models" aims to create a VQ-VAE model that can take an input of lesioned CT scans and output a "healed" image with no lesions, which can then be compared to the original image to detect the exact locations of the lesion.
 
 This approach is being tested by undergraduate researcher Ansh Goyal under the guidance of graduate research Xinyuan Fang and Dr. Robert Stevens.
+
+Note: Training and testing data is not stored in this repository.
