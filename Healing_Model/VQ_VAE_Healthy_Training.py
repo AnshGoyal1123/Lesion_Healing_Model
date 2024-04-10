@@ -1,7 +1,7 @@
 from VQ_VAE_Implementation import VQVAE
 import torch
 from torch.utils.data import DataLoader
-from Data_Loading.CTDataset import StrokeAI
+from CTDataset import StrokeAI
 
 # Initialize dataset with only healthy images for training
 dataset = StrokeAI(

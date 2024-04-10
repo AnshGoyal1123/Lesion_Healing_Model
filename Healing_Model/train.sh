@@ -9,4 +9,4 @@
 #SBATCH --mem=50G
 #SBATCH --export=ALL
 
-python /home/agoyal19/My_Work/VQ_VAE_Healthy_Training.py
+python /home/agoyal19/My_Work/Lesion_Healing_Model/Healing_Model/VQ_VAE_Healthy_Training.py
