@@ -5,7 +5,7 @@ from CTDataset import StrokeAI
 
 # Initialize dataset with only healthy images for training
 dataset = StrokeAI(
-    CT_root="../control_data",
+    CT_root="/home/agoyal19/control_data",
     DWI_root="/scratch4/rsteven1/StrokeAI/CTMRI_coreistration",
     ADC_root="/scratch4/rsteven1/StrokeAI/CTMRI_coreistration",
     label_root="/scratch4/rsteven1/StrokeAI/CTMRI_coreistration",

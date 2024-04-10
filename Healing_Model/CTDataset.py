@@ -199,14 +199,14 @@ class StrokeAI(Dataset):
         # mri_id = self.ct_map_mri.get(unique_id)
         
         # locate CT, MRI, Label
-        ct_path = os.path.join(self.ct_dir, f'{unique_id}_ct.nii.gz')
+        ct_path = os.path.join(self.ct_dir, f'{unique_id}.nii')
         # if self.MRI_type == 'DWI':
-        mri_path = os.path.join(self.dwi_dir, f'{unique_id}', f'{unique_id}_registered_mri.nii.gz')
+        mri_path = os.path.join(self.dwi_dir, f'{unique_id}', f'{unique_id}_registered_mri.nii')
         # elif self.MRI_type == 'ADC':
         #     mri_path = os.path.join(self.adc_dir, f'{unique_id}_ADC_coregis.nii.gz')   
         # else:
         #     assert False
-        label_path = os.path.join(self.label_dir, f'{unique_id}', f'{unique_id}_registered_label.nii.gz')
+        label_path = os.path.join(self.label_dir, f'{unique_id}', f'{unique_id}_registered_label.nii')
 
         # read file in sitk format
         ct_sitk = sitk.ReadImage(ct_path)
