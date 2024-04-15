@@ -1,23 +1,10 @@
 from VQ_VAE_Implementation import VQVAE
 import torch
 from torch.utils.data import DataLoader
-from CTDataset import StrokeAI
+from HealthyData import HealthyDataset
 
-# Initialize dataset with only healthy images for training
-dataset = StrokeAI(
-    CT_root="/home/agoyal19/control_data",
-    DWI_root="/scratch4/rsteven1/StrokeAI/CTMRI_coreistration",
-    ADC_root="/scratch4/rsteven1/StrokeAI/CTMRI_coreistration",
-    label_root="/scratch4/rsteven1/StrokeAI/CTMRI_coreistration",
-    MRI_type='DWI',
-    mode='train',  # Ensure this filters for healthy images only
-    bounding_box=True,
-    instance_normalize=True,
-    padding=False,
-    crop=False,  # Adjust based on your requirement
-    RotatingResize=False
-)
-
+dataset_directory = '/home/agoyal19/control_data'  # Update this to your directory
+dataset = HealthyDataset(directory=dataset_directory)
 data_loader = DataLoader(dataset, batch_size=4, shuffle=True)
 
 # Model Initialization
