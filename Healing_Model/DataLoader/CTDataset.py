@@ -11,7 +11,7 @@ import numpy as np
 import torchvision.transforms.functional as TF
 import random
 import torchio as tio
-from Util import random_crop_around_lesion
+from My_Work.Lesion_Healing_Model.Healing_Model.DataLoader.Util import random_crop_around_lesion
  # You can choose any number as the seed value
 
 class StrokeAI(Dataset):
