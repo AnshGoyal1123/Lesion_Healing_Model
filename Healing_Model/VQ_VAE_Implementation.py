@@ -63,7 +63,7 @@ class Encoder(nn.Module):
     def __init__(self, input_channels, hidden_channels, embedding_dim):
         super(Encoder, self).__init__()
         self.conv1 = nn.Conv3d(input_channels, hidden_channels, kernel_size=4, stride=2, padding=1)
-        self.conv2 = nn.Conv3d(hidden_channels, hidden_channels, kernel_size=4, stride=2, padding=1)
+        self.conv2 = nn.Conv3d(hidden_channels, hidden_channels, kernel_size=3, stride=1, padding=1)
         self.conv3 = nn.Conv3d(hidden_channels, hidden_channels, kernel_size=3, stride=1, padding=1)
         self.conv4 = nn.Conv3d(hidden_channels, embedding_dim, kernel_size=3, stride=1, padding=1)
 
@@ -79,8 +79,8 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
         self.conv1 = nn.ConvTranspose3d(embedding_dim, hidden_channels, kernel_size=3, stride=1, padding=1)
         self.conv2 = nn.ConvTranspose3d(hidden_channels, hidden_channels, kernel_size=3, stride=1, padding=1)
-        self.conv3 = nn.ConvTranspose3d(hidden_channels, hidden_channels, kernel_size=4, stride=2, padding=1)
-        self.conv4 = nn.ConvTranspose3d(hidden_channels, output_channels, kernel_size=4, stride=2, padding=1)
+        self.conv3 = nn.ConvTranspose3d(hidden_channels, hidden_channels, kernel_size=3, stride=1, padding=1)
+        self.conv4 = nn.ConvTranspose3d(hidden_channels, output_channels, kernel_size=4, stride=2, padding=1, output_padding=1)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
