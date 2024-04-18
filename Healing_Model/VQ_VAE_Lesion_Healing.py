@@ -8,7 +8,7 @@ import torch.nn.functional as F
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Load the pre-trained model
-model_path = 'path_to_your_pretrained_model.pth'  # Update this path
+model_path = '/home/agoyal19/My_Work/Lesion_Healing_Model/Healing_Model/Healthy_Model/vqvae_trained_on_healthy_images.pth'  # Update this path
 model = VQVAE(input_channels=1, hidden_channels=64, embedding_dim=64, num_embeddings=256, commitment_cost=0.25)
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.to(device)
