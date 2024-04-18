@@ -6,7 +6,8 @@ from torch.utils.data import Dataset
 class LesionedDataset(Dataset):
     def __init__(self, directory):
         self.directory = directory
-        self.filenames = [f for f in os.listdir(directory) if f.endswith('.nii')]
+        self.filenames = [f for f in os.listdir(directory) if f.endswith('.nii.gz')]
+        print(f"Loaded {len(self.filenames)} files from {directory}")
 
     def __len__(self):
         return len(self.filenames)

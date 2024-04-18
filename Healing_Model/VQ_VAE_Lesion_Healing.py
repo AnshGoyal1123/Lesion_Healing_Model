@@ -45,8 +45,8 @@ with torch.no_grad():
         for j in range(images.size(0)):
             img_data = reconstructed_images[j, 0].cpu().numpy()
             img_nii = nib.Nifti1Image(img_data, affine=np.eye(4))  # Assuming no need for specific affine
-            original_name = filenames[j].replace('.nii', '')  # Remove .nii extension
-            img_path = os.path.join(save_directory, f'{original_name}_reconstructed.nii')
+            original_name = filenames[j].replace('.nii.gz', '')  # Remove .nii extension
+            img_path = os.path.join(save_directory, f'{original_name}_reconstructed.nii.gz')
             nib.save(img_nii, img_path)
 
 # Compute average loss
