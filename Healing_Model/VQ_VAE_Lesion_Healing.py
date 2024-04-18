@@ -1,11 +1,11 @@
 import torch
 from torch.utils.data import DataLoader
-from LesionedData import LesionedDataset  # Adjust this import as necessary
-from VQ_VAE_Implementation import VQVAE  # Adjust this import as necessary
+from LesionedData import LesionedDataset
+from VQ_VAE_Implementation import VQVAE
 import torch.nn.functional as F
 import os
 import nibabel as nib
-import numpy as np  # Ensure numpy is imported
+import numpy as np
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -31,10 +31,11 @@ total_loss = 0
 with torch.no_grad():
     for batch_data in data_loader:
         images = batch_data['ct'].to(device).float()
+        filenames = batch_data['filename']
 
         # Forward pass through the model
         reconstructed_images, quantization_loss, _ = model(images)
-        
+
         # Calculate the reconstruction loss (MSE)
         reconstruction_loss = F.mse_loss(reconstructed_images, images)
         loss = reconstruction_loss + quantization_loss
@@ -44,7 +45,8 @@ with torch.no_grad():
         for j in range(images.size(0)):
             img_data = reconstructed_images[j, 0].cpu().numpy()
             img_nii = nib.Nifti1Image(img_data, affine=np.eye(4))  # Assuming no need for specific affine
-            img_path = os.path.join(save_directory, f'reconstructed_{j}.nii')
+            original_name = filenames[j].replace('.nii', '')  # Remove .nii extension
+            img_path = os.path.join(save_directory, f'{original_name}_reconstructed.nii')
             nib.save(img_nii, img_path)
 
 # Compute average loss
