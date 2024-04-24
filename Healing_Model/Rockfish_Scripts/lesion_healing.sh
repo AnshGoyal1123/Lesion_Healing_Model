@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --account=rsteven1_gpu
-#SBATCH --job-name=healthy_train
+#SBATCH --job-name=lesion_healing
 #SBATCH --nodes=1
 #SBATCH --partition=a100
 #SBATCH --gpus-per-node=4
