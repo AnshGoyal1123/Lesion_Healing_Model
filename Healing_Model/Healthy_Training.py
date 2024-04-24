@@ -37,6 +37,6 @@ for epoch in range(500):
     print(f"Epoch {epoch+1}/{500}, Loss: {epoch_loss/len(data_loader)}")
 
 # Saving the trained model
-model_save_path = "vqvae_trained_on_healthy_images_3.pth"
+model_save_path = "healthy_vqvae_3.pth"
 torch.save(healthy_model.state_dict(), model_save_path)
 print(f"Model saved to {model_save_path}")
