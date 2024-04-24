@@ -23,7 +23,7 @@ dataset = LesionedDataset(directory=dataset_directory)
 data_loader = DataLoader(dataset, batch_size=4, shuffle=False)
 
 # Directory to save the reconstructed images in NIfTI format
-save_directory = '/home/agoyal19/Dataset/reconstructed_images/'
+save_directory = '/home/agoyal19/Dataset/reconstructed_images_2/'
 os.makedirs(save_directory, exist_ok=True)
 
 # Validation and saving reconstructed images

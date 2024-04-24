@@ -19,7 +19,7 @@ healthy_model.to(device)
 optimizer = torch.optim.Adam(healthy_model.parameters(), lr=1e-4)
 
 # Training loop
-num_epochs = 100  # Set the number of epochs
+num_epochs = 500  # Set the number of epochs
 for epoch in range(num_epochs):
     epoch_loss = 0
     for batch_data in data_loader:
