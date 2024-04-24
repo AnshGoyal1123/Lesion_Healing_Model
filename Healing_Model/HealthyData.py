@@ -10,7 +10,7 @@ class HealthyDataset(Dataset):
             directory (string): Directory with all the .nii files.
         """
         self.directory = directory
-        self.filenames = [f for f in os.listdir(directory) if f.endswith('.nii')]
+        self.filenames = [f for f in os.listdir(directory) if f.endswith('.nii.gz')]
 
     def __len__(self):
         return len(self.filenames)

@@ -19,8 +19,7 @@ healthy_model.to(device)
 optimizer = torch.optim.Adam(healthy_model.parameters(), lr=1e-4)
 
 # Training loop
-num_epochs = 500  # Set the number of epochs
-for epoch in range(num_epochs):
+for epoch in range(500):
     epoch_loss = 0
     for batch_data in data_loader:
         images = batch_data['ct'].to(device).float()  # Ensure your dataset outputs the correct key
@@ -35,9 +34,9 @@ for epoch in range(num_epochs):
         
         epoch_loss += loss.item()
     
-    print(f"Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss/len(data_loader)}")
+    print(f"Epoch {epoch+1}/{500}, Loss: {epoch_loss/len(data_loader)}")
 
 # Saving the trained model
-model_save_path = "vqvae_trained_on_healthy_images.pth"
+model_save_path = "vqvae_trained_on_healthy_images_3.pth"
 torch.save(healthy_model.state_dict(), model_save_path)
 print(f"Model saved to {model_save_path}")
