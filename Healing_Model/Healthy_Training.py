@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from HealthyData import HealthyDataset
 from torch.nn import functional as F
 
-dataset_directory = '/home/agoyal19/control_data'  # Update this to your directory
+dataset_directory = '/home/agoyal19/Dataset/control_data'  # Update this to your directory
 dataset = HealthyDataset(directory=dataset_directory)
 data_loader = DataLoader(dataset, batch_size=4, shuffle=True)
 

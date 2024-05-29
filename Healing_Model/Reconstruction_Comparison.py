@@ -29,15 +29,17 @@ def plot_difference(diff_map, filename):
     plt.close()
 
 # Paths to the folders
-healthy_folder = '/home/agoyal19/Dataset/data/images'
-reconstructed_folder = '/home/agoyal19/Dataset/reconstructed_images'
+#TODO: Update dataset size based on threshold......|
+lesioned_folder = '/home/agoyal19/Dataset/Dataset_0.5/data/images'
+#TODO: Update dataset size based on threshold.............................................|
+reconstructed_folder = '/home/agoyal19/Dataset/Reconstructions_BM3D/reconstructed_images_0.5'
 
-# Get the list of files in the healthy folder
-healthy_files = [f for f in os.listdir(healthy_folder) if f.endswith('.nii.gz')]
+# Get the list of files in the lesioned folder
+lesioned_files = [f for f in os.listdir(lesioned_folder) if f.endswith('.nii.gz')]
 
-# Loop through each file in the healthy folder
-for file in healthy_files:
-    healthy_path = os.path.join(healthy_folder, file)
+# Loop through each file in the lesioned folder
+for file in lesioned_files:
+    lesioned_path = os.path.join(lesioned_folder, file)
     # Construct the path for the corresponding reconstructed file
     reconstructed_file = file.replace('.nii.gz', '_reconstructed.nii.gz')
     reconstructed_path = os.path.join(reconstructed_folder, reconstructed_file)
@@ -45,7 +47,7 @@ for file in healthy_files:
     # Check if the reconstructed file exists
     if os.path.exists(reconstructed_path):
         # Load the image data from files
-        normal_scan = load_nifti(healthy_path)
+        normal_scan = load_nifti(lesioned_path)
         lesion_scan = load_nifti(reconstructed_path)
 
         # Generate a difference map

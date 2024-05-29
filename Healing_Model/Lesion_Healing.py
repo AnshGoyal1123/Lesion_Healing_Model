@@ -19,12 +19,14 @@ model.to(device)
 model.eval()
 
 # Prepare your dataset
-dataset_directory = '/home/agoyal19/Dataset/data/images/'
+#TODO: Update dataset size based on threshold........|
+dataset_directory = '/home/agoyal19/Dataset/Dataset_0.5/data/images'
 dataset = LesionedDataset(directory=dataset_directory)
 data_loader = DataLoader(dataset, batch_size=4, shuffle=False)
 
 # Directory to save the reconstructed images in NIfTI format
-save_directory = '/home/agoyal19/Dataset/reconstructed_images_bm3d/'
+#TODO: Update dataset size based on threshold.......................................|
+save_directory = '/home/agoyal19/Dataset/Reconstructions_BM3D/reconstructed_images_0.5'
 os.makedirs(save_directory, exist_ok=True)
 
 # Function to apply BM3D denoising
