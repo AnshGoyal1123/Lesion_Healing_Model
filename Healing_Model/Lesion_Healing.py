@@ -12,7 +12,7 @@ import bm3d
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Load the pre-trained model
-model_path = '/home/agoyal19/My_Work/Lesion_Healing_Model/Healing_Model/Healthy_Models/healthy_vqvae.pth'
+model_path = '/home/agoyal19/My_Work/Healing_Model/Healthy_Models/healthy_vqvae.pth'
 model = VQVAE(input_channels=1, hidden_channels=64, embedding_dim=64, num_embeddings=256, commitment_cost=0.25)
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.to(device)
@@ -20,7 +20,7 @@ model.eval()
 
 # Prepare your dataset
 #TODO: Update dataset size based on threshold........|
-dataset_directory = '/home/agoyal19/Dataset/Dataset_0.5/data/images'
+dataset_directory = '/home/agoyal19/Dataset/Dataset_0.5/images'
 dataset = LesionedDataset(directory=dataset_directory)
 data_loader = DataLoader(dataset, batch_size=4, shuffle=False)
 

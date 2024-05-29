@@ -30,7 +30,7 @@ def plot_difference(diff_map, filename):
 
 # Paths to the folders
 #TODO: Update dataset size based on threshold......|
-lesioned_folder = '/home/agoyal19/Dataset/Dataset_0.5/data/images'
+lesioned_folder = '/home/agoyal19/Dataset/Dataset_0.5/images'
 #TODO: Update dataset size based on threshold.............................................|
 reconstructed_folder = '/home/agoyal19/Dataset/Reconstructions_BM3D/reconstructed_images_0.5'
 
