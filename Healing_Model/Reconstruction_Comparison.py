@@ -27,12 +27,12 @@ def save_difference_map(diff_map, affine, output_path):
     nib.save(new_image, output_path)
 
 # Paths to the folders
-#TODO: Update dataset size based on threshold......|
-lesioned_folder = '/home/agoyal19/Dataset/Dataset_0.5/images'
-#TODO: Update dataset size based on threshold.............................................|
-reconstructed_folder = '/home/agoyal19/Dataset/Reconstructions_BM3D/reconstructed_images_0.5'
-#TODO: Update dataset size based on threshold............|
-output_folder = '/home/agoyal19/Dataset/Difference_Maps_0.5'
+#TODO: Update dataset size based on threshold.....|
+lesioned_folder = '/home/agoyal19/Dataset/Dataset_5/images'
+#TODO: Update dataset size based on threshold............................................|
+reconstructed_folder = '/home/agoyal19/Dataset/Reconstructions_BM3D/reconstructed_images_5'
+#TODO: Update dataset size based on threshold...........|
+output_folder = '/home/agoyal19/Dataset/Difference_Maps_5'
 
 # Create the output folder if it doesn't exist
 if not os.path.exists(output_folder):
