@@ -25,7 +25,7 @@ dataset = LesionedDataset(directory=dataset_directory)
 data_loader = DataLoader(dataset, batch_size=4, shuffle=False)
 
 # Directory to save the reconstructed images in NIfTI format
-#TODO: Update dataset size based on threshold.......................................|
+#TODO: Update dataset size based on threshold..................................|
 save_directory = '/home/agoyal19/Dataset/Reconstructions/reconstructed_images_0.5'
 os.makedirs(save_directory, exist_ok=True)
 
