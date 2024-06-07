@@ -26,31 +26,8 @@ data_loader = DataLoader(dataset, batch_size=4, shuffle=False)
 
 # Directory to save the reconstructed images in NIfTI format
 #TODO: Update dataset size based on threshold.......................................|
-save_directory = '/home/agoyal19/Dataset/Reconstructions_BM3D/reconstructed_images_0.5'
+save_directory = '/home/agoyal19/Dataset/Reconstructions/reconstructed_images_0.5'
 os.makedirs(save_directory, exist_ok=True)
-
-# # Function to apply BM3D denoising
-# def apply_bm3d_to_tensor(tensor, sigma_psd=30):
-#     tensor_np = tensor.cpu().numpy()
-#     print(f'Original tensor shape: {tensor_np.shape}')  # Debug statement
-
-#     # Ensure tensor is 3D (for CT images, it should be in (D, H, W) format)
-#     if tensor_np.ndim == 4:
-#         tensor_np = tensor_np[:, 0, :, :]  # Remove the channel dimension if present
-#         print(f'Shape after removing channel dimension: {tensor_np.shape}')  # Debug statement
-
-#     # Ensure that each 3D volume is processed separately if batch size > 1
-#     if tensor_np.ndim == 3:
-#         denoised_tensor_np = bm3d.bm3d(tensor_np, sigma_psd=sigma_psd)
-#         denoised_tensor_np = np.expand_dims(denoised_tensor_np, axis=0)  # Add batch dimension
-#     else:
-#         denoised_tensor_np = np.array([bm3d.bm3d(tensor_np[i], sigma_psd=sigma_psd) for i in range(tensor_np.shape[0])])
-
-#     # Add back the channel dimension
-#     denoised_tensor_np = np.expand_dims(denoised_tensor_np, axis=1)
-#     print(f'Shape after BM3D denoising: {denoised_tensor_np.shape}')  # Debug statement
-
-#     return torch.from_numpy(denoised_tensor_np).to(tensor.device)
 
 # Validation and saving reconstructed images
 total_loss = 0
@@ -63,9 +40,6 @@ with torch.no_grad():
         reconstructed_images, quantization_loss, _ = model(images)
 
         print(f'Reconstructed images shape: {reconstructed_images.shape}')  # Debug statement
-
-        # Denoise using BM3D
-        # reconstructed_images_denoised = apply_bm3d_to_tensor(reconstructed_images)
 
         # Calculate the reconstruction loss (MSE)
         reconstruction_loss = F.mse_loss(reconstructed_images, images)
