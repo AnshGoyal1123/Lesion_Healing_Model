@@ -19,14 +19,14 @@ model.to(device)
 model.eval()
 
 # Prepare your dataset
-#TODO: Update dataset size based on threshold........|
-dataset_directory = '/home/agoyal19/Dataset/Dataset_0.5/images'
+#TODO: Update dataset size based on threshold.......|
+dataset_directory = '/home/agoyal19/Dataset/Dataset_1/images'
 dataset = LesionedDataset(directory=dataset_directory)
 data_loader = DataLoader(dataset, batch_size=4, shuffle=False)
 
 # Directory to save the reconstructed images in NIfTI format
-#TODO: Update dataset size based on threshold..................................|
-save_directory = '/home/agoyal19/Dataset/Reconstructions/reconstructed_images_0.5'
+#TODO: Update dataset size based on threshold.................................|
+save_directory = '/home/agoyal19/Dataset/Reconstructions/reconstructed_images_1'
 os.makedirs(save_directory, exist_ok=True)
 
 # Validation and saving reconstructed images
