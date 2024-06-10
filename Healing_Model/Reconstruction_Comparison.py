@@ -16,7 +16,7 @@ def compare_voxels(img1, img2):
     """Compare two voxel arrays and return a difference map."""
     return np.abs(img1 - img2)
 
-def threshold_difference(diff_map, threshold_multiplier=2):
+def threshold_difference(diff_map, threshold_multiplier=4):
     """Apply threshold to difference map to find significant differences."""
     threshold = np.mean(diff_map) + threshold_multiplier * np.std(diff_map)
     return diff_map > threshold
