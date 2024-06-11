@@ -1,11 +1,7 @@
-import wandb
 import nibabel as nib
 import numpy as np
 import os
 from scipy.ndimage import label
-
-# Initialize wandb
-wandb.init(project='lesion_detection')
 
 def load_nifti(file_path):
     """Load a NIfTI file and return the data array."""
@@ -27,11 +23,11 @@ def save_difference_map(diff_map, affine, output_path):
     nib.save(new_image, output_path)
 
 # Paths to the folders
-#TODO: Update dataset size based on threshold.....|
+#TODO: Update dataset size based on threshold
 lesioned_folder = '/home/agoyal19/Dataset/Dataset_5/images'
-#TODO: Update dataset size based on threshold.......................................|
+#TODO: Update dataset size based on threshold
 reconstructed_folder = '/home/agoyal19/Dataset/Reconstructions/reconstructed_images_5'
-#TODO: Update dataset size based on threshold...........|
+#TODO: Update dataset size based on threshold
 output_folder = '/home/agoyal19/Dataset/Difference_Maps_5'
 
 # Create the output folder if it doesn't exist
@@ -63,9 +59,6 @@ for file in lesioned_files:
         # Save the significant difference map as a NIfTI file
         output_path = os.path.join(output_folder, file)
         save_difference_map(significant_diff, affine, output_path)
-
-        # Log the output file to W&B
-        wandb.log({f"difference_map_{file[:-7]}": wandb.Artifact(output_path, type='image')})
     else:
         print(f"No corresponding file found for {file}")
 

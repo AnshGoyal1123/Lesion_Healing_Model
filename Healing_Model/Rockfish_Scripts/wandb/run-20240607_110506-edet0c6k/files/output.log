@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "/home/agoyal19/My_Work/Healing_Model/Reconstruction_Comparison.py", line 68, in <module>
-    wandb.log({f"difference_map_{file[:-7]}": wandb.Artifact(output_path, type='image')})
-  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/wandb/sdk/artifacts/artifact.py", line 124, in __init__
-    raise ValueError(
-ValueError: Artifact name may only contain alphanumeric characters, dashes, underscores, and dots. Invalid name: /home/agoyal19/Dataset/Difference_Maps_5/2662_8797322952_ct.nii.gz
