@@ -2,23 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-"""
-Implementation based on the paper "Fast Unsupervised Brain Anomaly Detection and Segmentation with Diffusion Models".
-This code provides a foundational structure for a Vector Quantized-Variational AutoEncoder (VQ-VAE) designed to compress
-and reconstruct brain images efficiently. The current implementation includes four encoding layers to compress the image 
-into a latent space, a quantizing layer to discretize this space for efficient learning, and four decoding layers to 
-reconstruct the image from the latent representation.
-
-Current Capabilities:
-- Efficiently compresses high-dimensional brain images into a compact latent representation.
-- Reconstructs images from the latent space, maintaining essential details for medical analysis.
-
-Proposed Use:
-- A healing process can be integrated, with the model deconstructing the image and then changing the latent representations 
-  of detected anomalies to match those of healthy tissue before reconstruction, allowing the model to "heal" the images by 
-  replacing anomalous regions with normal brain tissue patterns. This will be accomplished through further model training 
-  and the development of algorithms to adjust the latent space based on the characteristics of healthy images.
-"""
 
 class VectorQuantizer(nn.Module):
     def __init__(self, num_embeddings, embedding_dim, commitment_cost):
