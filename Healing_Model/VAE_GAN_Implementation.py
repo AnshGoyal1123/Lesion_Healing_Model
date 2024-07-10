@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.distributions import Normal
+from torch.utils.data import DataLoader
 
 # Encoder
 class Encoder(nn.Module):
@@ -10,14 +10,14 @@ class Encoder(nn.Module):
         self.conv1 = nn.Conv3d(input_channels, hidden_channels, kernel_size=4, stride=2, padding=1)
         self.conv2 = nn.Conv3d(hidden_channels, hidden_channels, kernel_size=3, stride=1, padding=1)
         self.conv3 = nn.Conv3d(hidden_channels, hidden_channels, kernel_size=3, stride=1, padding=1)
-        self.conv4 = nn.Conv3d(hidden_channels, z_dim*2, kernel_size=3, stride=1, padding=1) # z_dim*2 for mean and logvar
+        self.conv4 = nn.Conv3d(hidden_channels, z_dim*2, kernel_size=3, stride=1, padding=1)  # z_dim*2 for mean and logvar
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
         x = self.conv4(x)
-        mean, logvar = torch.chunk(x, 2, dim=1) # Split into mean and logvar
+        mean, logvar = torch.chunk(x, 2, dim=1)  # Split into mean and logvar
         return mean, logvar
 
 # Decoder
@@ -82,45 +82,63 @@ def gan_loss(real_output, fake_output):
     fake_loss = F.binary_cross_entropy(fake_output, torch.zeros_like(fake_output))
     return real_loss + fake_loss
 
-# Instantiate the model
-input_channels = 1  # Assuming grayscale brain images
-hidden_channels = 32
-z_dim = 64
-model = VAEGAN(input_channels, hidden_channels, z_dim)
+# Training function
+def train_vaegan(model, dataset, num_epochs=100, batch_size=4, lr=1e-4, device=None):
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    
+    data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-# Optimizers
-vae_optimizer = torch.optim.Adam(list(model.encoder.parameters()) + list(model.decoder.parameters()), lr=1e-4)
-discriminator_optimizer = torch.optim.Adam(model.discriminator.parameters(), lr=1e-4)
+    vae_optimizer = torch.optim.Adam(list(model.encoder.parameters()) + list(model.decoder.parameters()), lr=lr)
+    discriminator_optimizer = torch.optim.Adam(model.discriminator.parameters(), lr=lr)
 
-# Training Loop (Example)
-num_epochs = 100
-for epoch in range(num_epochs):
-    for data in dataloader:  # Assuming dataloader is defined elsewhere
-        # Get input data
-        x = data.to(device)
-        
-        # VAE-GAN forward pass
-        x_recon, mean, logvar = model(x)
-        
-        # VAE loss
-        recon_loss = vae_loss(x, x_recon, mean, logvar)
-        
-        # Discriminator forward pass
-        real_output = model.discriminator(x)
-        fake_output = model.discriminator(x_recon.detach())
-        
-        # GAN loss
-        d_loss = gan_loss(real_output, fake_output)
-        
-        # Update VAE
-        vae_optimizer.zero_grad()
-        recon_loss.backward()
-        vae_optimizer.step()
-        
-        # Update Discriminator
-        discriminator_optimizer.zero_grad()
-        d_loss.backward()
-        discriminator_optimizer.step()
+    for epoch in range(num_epochs):
+        epoch_vae_loss = 0
+        epoch_gan_loss = 0
+        for batch_data in data_loader:
+            images = batch_data['ct'].to(device).float()  # Ensure your dataset outputs the correct key
 
-    print(f"Epoch {epoch + 1}, VAE Loss: {recon_loss.item()}, GAN Loss: {d_loss.item()}")
+            # VAE-GAN forward pass
+            x_recon, mean, logvar = model(images)
+            
+            # VAE loss
+            recon_loss = vae_loss(images, x_recon, mean, logvar)
+            
+            # Discriminator forward pass
+            real_output = model.discriminator(images)
+            fake_output = model.discriminator(x_recon.detach())
+            
+            # GAN loss
+            d_loss = gan_loss(real_output, fake_output)
+            
+            # Update VAE
+            vae_optimizer.zero_grad()
+            recon_loss.backward()
+            vae_optimizer.step()
+            
+            # Update Discriminator
+            discriminator_optimizer.zero_grad()
+            d_loss.backward()
+            discriminator_optimizer.step()
 
+            epoch_vae_loss += recon_loss.item()
+            epoch_gan_loss += d_loss.item()
+        
+        print(f"Epoch {epoch+1}/{num_epochs}, VAE Loss: {epoch_vae_loss/len(data_loader)}, GAN Loss: {epoch_gan_loss/len(data_loader)}")
+
+    return model
+
+# Save model function
+def save_model(model, path):
+    torch.save(model.state_dict(), path)
+    print(f"Model saved to {path}")
+
+# Load model function
+def load_model(model, path, device=None):
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.load_state_dict(torch.load(path, map_location=device))
+    model.to(device)
+    print(f"Model loaded from {path}")
+   
