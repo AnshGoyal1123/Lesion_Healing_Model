@@ -9,4 +9,4 @@
 #SBATCH --mem=50G
 #SBATCH --export=ALL
 
-python /home/agoyal19/My_Work/Healing_Model/Reconstruction_Comparison.py
+python /home/agoyal19/My_Work/Healing_Model/VQ-VAE/Reconstruction_Comp_VAE.py
