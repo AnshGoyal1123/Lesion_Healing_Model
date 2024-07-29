@@ -22,5 +22,5 @@ learning_rate = 1e-4
 trained_model = train_vqvaegan(model, dataset, num_epochs=num_epochs, batch_size=batch_size, lr=learning_rate)
 
 # Save the trained model
-model_save_path = "/home/agoyal19/My_Work/Healing_Model/Healthy_Models/healthy_vqvaegan.pth"
+model_save_path = "/home/agoyal19/My_Work/Healing_Model/Healthy_Models/healthy_vaegan.pth"
 save_model(trained_model, model_save_path)
