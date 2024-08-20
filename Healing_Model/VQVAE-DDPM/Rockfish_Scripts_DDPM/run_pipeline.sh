@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --partition=a100
 #SBATCH --gpus-per-node=4
-#SBATCH --time=100:00:00
+#SBATCH --time=50:00:00
 #SBATCH --mem=100G
 #SBATCH --export=ALL
 
