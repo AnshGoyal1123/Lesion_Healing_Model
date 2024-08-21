@@ -10,9 +10,9 @@
 #SBATCH --export=ALL
 
 # Step 1: Train the VQ-VAE model on healthy brain scans
-echo "Starting VQ-VAE training on healthy data..."
-python /home/agoyal19/My_Work/Healing_Model/VQVAE-DDPM/Healthy_Training_VAE.py
-echo "VQ-VAE training completed."
+#echo "Starting VQ-VAE training on healthy data..."
+#python /home/agoyal19/My_Work/Healing_Model/VQVAE-DDPM/Healthy_Training_VAE.py
+#echo "VQ-VAE training completed."
 
 # Step 2: Train the DDPM model on latent representations of healthy brain scans
 echo "Starting DDPM training on latent representations from VQ-VAE..."
