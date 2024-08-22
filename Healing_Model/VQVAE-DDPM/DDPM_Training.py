@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 from HealthyData import HealthyDataset
 from VQ_VAE_Implementation import VQVAE
-from DDPM_Implementation import DDPM, UNet
+from DDPM_Implementation import DDPM, UNet3D  # Use the new 3D UNet
 import torch.nn.functional as F
 import numpy as np
 
@@ -20,7 +20,7 @@ vqvae_model.eval()
 ddpm_model = DDPM(
     betas=np.linspace(1e-4, 0.02, 1000),
     num_timesteps=1000,
-    model=UNet(in_channels=64, out_channels=64),
+    model=UNet3D(in_channels=64, out_channels=64),  # Use the 3D UNet here
     device=device
 )
 ddpm_model.to(device)
@@ -34,7 +34,8 @@ data_loader = DataLoader(dataset, batch_size=4, shuffle=True)
 optimizer = torch.optim.Adam(ddpm_model.parameters(), lr=1e-4)
 
 # Training loop
-for epoch in range(500):
+num_epochs = 500
+for epoch in range(num_epochs):
     epoch_loss = 0
     for batch_data in data_loader:
         images = batch_data['ct'].to(device).float()
@@ -49,7 +50,7 @@ for epoch in range(500):
         z_noisy = ddpm_model.q_sample(z, t)
         
         # Predict the noise added
-        predicted_noise = ddpm_model.model(z_noisy, t)
+        predicted_noise = ddpm_model.model(z_noisy)
         
         # Compute the loss (how close the predicted noise is to the actual noise)
         loss = F.mse_loss(predicted_noise, z_noisy - z)
@@ -61,7 +62,7 @@ for epoch in range(500):
         
         epoch_loss += loss.item()
 
-    print(f'Epoch {epoch + 1}/{500}, Loss: {epoch_loss / len(data_loader)}')
+    print(f'Epoch {epoch + 1}/{num_epochs}, Loss: {epoch_loss / len(data_loader)}')
 
 # Save the trained DDPM model
 ddpm_save_path = "/home/agoyal19/My_Work/Healing_Model/DDPM_Models/ddpm_model.pth"

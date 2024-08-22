@@ -2,26 +2,25 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-class UNet(nn.Module):
-    # Define your U-Net architecture here
+class UNet3D(nn.Module):
     def __init__(self, in_channels=1, out_channels=1, features=[64, 128, 256, 512]):
-        super(UNet, self).__init__()
+        super(UNet3D, self).__init__()
         self.downs = nn.ModuleList()
         self.ups = nn.ModuleList()
 
         # Downsampling path
         for feature in features:
-            self.downs.append(self._block(in_channels, feature))
+            self.downs.append(self._block(in_channels, feature, kernel_size=3))
             in_channels = feature
 
         # Bottleneck
-        self.bottleneck = self._block(features[-1], features[-1] * 2)
+        self.bottleneck = self._block(features[-1], features[-1] * 2, kernel_size=3)
 
         # Upsampling path
         for feature in reversed(features):
-            self.ups.append(self._block(feature * 2, feature))
+            self.ups.append(self._block(feature * 2, feature, kernel_size=3))
 
-        self.final_conv = nn.Conv2d(features[0], out_channels, kernel_size=1)
+        self.final_conv = nn.Conv3d(features[0], out_channels, kernel_size=1)
 
     def forward(self, x):
         skip_connections = []
@@ -38,11 +37,11 @@ class UNet(nn.Module):
 
         return self.final_conv(x)
 
-    def _block(self, in_channels, out_channels):
+    def _block(self, in_channels, out_channels, kernel_size):
         return nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+            nn.Conv3d(in_channels, out_channels, kernel_size=kernel_size, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
+            nn.Conv3d(out_channels, out_channels, kernel_size=kernel_size, padding=1),
             nn.ReLU(inplace=True)
         )
 
@@ -65,11 +64,15 @@ class DDPM(nn.Module):
     def q_sample(self, x_start, t, noise=None):
         if noise is None:
             noise = torch.randn_like(x_start)
+        
+        # Reshape the time tensor to be broadcastable with x_start
+        t = t.view(-1, 1, 1, 1, 1)
+        
         return (self.sqrt_alphas_cumprod[t] * x_start + 
                 self.sqrt_one_minus_alphas_cumprod[t] * noise)
 
     def p_mean_variance(self, x, t, clip_denoised=True):
-        model_output = self.model(x, t)
+        model_output = self.model(x)  # Call the 3D UNet model
         posterior_mean = (
             self.sqrt_alphas_cumprod_prev[t] * x - self.betas[t] * model_output
         ) / torch.sqrt(1.0 - self.alphas_cumprod_prev[t])
