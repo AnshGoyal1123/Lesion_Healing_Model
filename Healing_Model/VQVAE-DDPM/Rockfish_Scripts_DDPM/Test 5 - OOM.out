@@ -1,0 +1,157 @@
+Starting DDPM training on latent representations from VQ-VAE...
+Traceback (most recent call last):
+  File "/home/agoyal19/My_Work/Healing_Model/VQVAE-DDPM/DDPM_Training.py", line 53, in <module>
+    predicted_noise = ddpm_model.model(z_noisy).float()
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/agoyal19/My_Work/Healing_Model/VQVAE-DDPM/DDPM_Implementation.py", line 35, in forward
+    x = self.ups[idx](x)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/container.py", line 215, in forward
+    input = module(input)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/conv.py", line 610, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/conv.py", line 605, in _conv_forward
+    return F.conv3d(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 4.08 GiB. GPU 0 has a total capacty of 39.56 GiB of which 3.46 GiB is free. Including non-PyTorch memory, this process has 36.10 GiB memory in use. Of the allocated memory 34.53 GiB is allocated by PyTorch, and 98.09 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+DDPM training completed.
+Starting lesion healing and reconstruction with VQ-VAE and DDPM...
+Loaded 578 files from /home/agoyal19/Dataset/Dataset_Full/images
+Traceback (most recent call last):
+  File "/home/agoyal19/My_Work/Healing_Model/VQVAE-DDPM/Lesion_Healing_VAE_with_DDPM.py", line 53, in <module>
+    z_healed = ddpm_model.sample(z_noisy.shape)
+  File "/home/agoyal19/My_Work/Healing_Model/VQVAE-DDPM/DDPM_Implementation.py", line 90, in sample
+    x = self.p_sample(x, t)
+  File "/home/agoyal19/My_Work/Healing_Model/VQVAE-DDPM/DDPM_Implementation.py", line 83, in p_sample
+    posterior_mean, posterior_variance = self.p_mean_variance(x, t)
+  File "/home/agoyal19/My_Work/Healing_Model/VQVAE-DDPM/DDPM_Implementation.py", line 75, in p_mean_variance
+    model_output = self.model(x).float()  # Call the 3D UNet model
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/agoyal19/My_Work/Healing_Model/VQVAE-DDPM/DDPM_Implementation.py", line 31, in forward
+    x = self.bottleneck(x)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/container.py", line 215, in forward
+    input = module(input)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/conv.py", line 610, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "/home/agoyal19/anaconda3/envs/seg/lib/python3.8/site-packages/torch/nn/modules/conv.py", line 605, in _conv_forward
+    return F.conv3d(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 16.31 GiB. GPU 0 has a total capacty of 39.56 GiB of which 2.83 GiB is free. Including non-PyTorch memory, this process has 36.73 GiB memory in use. Of the allocated memory 35.10 GiB is allocated by PyTorch, and 157.49 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+Lesion healing and reconstruction completed.
+Starting comparison of original and reconstructed images...
+No corresponding file found for 2662_8797322952_ct.nii.gz
+No corresponding file found for 2663_3652734274_ct.nii.gz
+No corresponding file found for 2466_3294437236_ct.nii.gz
+No corresponding file found for 2538_3367098122_ct.nii.gz
+No corresponding file found for 2250_3398157536_ct.nii.gz
+No corresponding file found for 2356_1816582544_ct.nii.gz
+No corresponding file found for 2488_2262220363_ct.nii.gz
+No corresponding file found for 2365_5011748479_ct.nii.gz
+No corresponding file found for 2589_3389945183_ct.nii.gz
+No corresponding file found for 2638_1634566566_ct.nii.gz
+No corresponding file found for 2262_3233827331_ct.nii.gz
+No corresponding file found for 2490_8361455010_ct.nii.gz
+No corresponding file found for 2666_1952913604_ct.nii.gz
+No corresponding file found for 2669_1443109235_ct.nii.gz
+No corresponding file found for 2717_2974869217_ct.nii.gz
+No corresponding file found for 2511_7748937238_ct.nii.gz
+No corresponding file found for 2404_1540277513_ct.nii.gz
+No corresponding file found for 2543_2894800801_ct.nii.gz
+No corresponding file found for 2300_1109689758_ct.nii.gz
+No corresponding file found for 2417_2535096532_ct.nii.gz
+No corresponding file found for 2534_1889987918_ct.nii.gz
+No corresponding file found for 2378_3876451394_ct.nii.gz
+No corresponding file found for 2402_1511097630_ct.nii.gz
+No corresponding file found for 2386_1583316811_ct.nii.gz
+No corresponding file found for 2535_9324685971_ct.nii.gz
+No corresponding file found for 2700_2514234346_ct.nii.gz
+No corresponding file found for 2544_3238972517_ct.nii.gz
+No corresponding file found for 2452_1469111226_ct.nii.gz
+No corresponding file found for 2691_3247450148_ct.nii.gz
+No corresponding file found for 2329_1317555555_ct.nii.gz
+No corresponding file found for 2629_1998180782_ct.nii.gz
+No corresponding file found for 2362_2086466981_ct.nii.gz
+No corresponding file found for 2297_5482867529_ct.nii.gz
+No corresponding file found for 2596_3172035407_ct.nii.gz
+No corresponding file found for 2301_1090672398_ct.nii.gz
+No corresponding file found for 2552_2923313470_ct.nii.gz
+No corresponding file found for 2724_1110778744_ct.nii.gz
+No corresponding file found for 2344_1784693666_ct.nii.gz
+No corresponding file found for 2460_3329191953_ct.nii.gz
+No corresponding file found for 2461_2767934036_ct.nii.gz
+No corresponding file found for 2343_2898251269_ct.nii.gz
+No corresponding file found for 2352_2745484568_ct.nii.gz
+No corresponding file found for 2437_6841614189_ct.nii.gz
+No corresponding file found for 2621_2598965783_ct.nii.gz
+No corresponding file found for 2592_7804356343_ct.nii.gz
+No corresponding file found for 2643_1666973011_ct.nii.gz
+No corresponding file found for 2224_2564111995_ct.nii.gz
+No corresponding file found for 2327_2754984454_ct.nii.gz
+No corresponding file found for 2395_2969430364_ct.nii.gz
+No corresponding file found for 2332_1332810907_ct.nii.gz
+No corresponding file found for 2654_4804852375_ct.nii.gz
+No corresponding file found for 2278_6799124093_ct.nii.gz
+No corresponding file found for 2480_1623205057_ct.nii.gz
+No corresponding file found for 2302_5202280354_ct.nii.gz
+No corresponding file found for 2359_1143641672_ct.nii.gz
+No corresponding file found for 2398_9065013941_ct.nii.gz
+No corresponding file found for 2227_2339850822_ct.nii.gz
+No corresponding file found for 2393_1579978364_ct.nii.gz
+No corresponding file found for 2472_1401034787_ct.nii.gz
+No corresponding file found for 2558_2600679528_ct.nii.gz
+No corresponding file found for 2416_5966879525_ct.nii.gz
+No corresponding file found for 2720_1407821446_ct.nii.gz
+No corresponding file found for 2226_2061339079_ct.nii.gz
+No corresponding file found for 2665_1277653488_ct.nii.gz
+No corresponding file found for 2683_1003443553_ct.nii.gz
+No corresponding file found for 2321_1066986767_ct.nii.gz
+No corresponding file found for 2595_2315387681_ct.nii.gz
+No corresponding file found for 2436_9697792254_ct.nii.gz
+No corresponding file found for 2467_5848318514_ct.nii.gz
+No corresponding file found for 2392_3387008770_ct.nii.gz
+No corresponding file found for 2432_3338125403_ct.nii.gz
+No corresponding file found for 2426_2147877392_ct.nii.gz
+No corresponding file found for 2324_1047084599_ct.nii.gz
+No corresponding file found for 2574_9429834720_ct.nii.gz
+No corresponding file found for 2235_8257173982_ct.nii.gz
+No corresponding file found for 2477_2365258310_ct.nii.gz
+No corresponding file found for 2370_2617539245_ct.nii.gz
+No corresponding file found for 2639_1492006128_ct.nii.gz
+No corresponding file found for 2594_1193594639_ct.nii.gz
+No corresponding file found for 2651_7108378507_ct.nii.gz
+No corresponding file found for 2619_7747326685_ct.nii.gz
+No corresponding file found for 2475_3222867941_ct.nii.gz
+No corresponding file found for 2464_1134400670_ct.nii.gz
+No corresponding file found for 2653_9003070470_ct.nii.gz
+No corresponding file found for 2671_1296617584_ct.nii.gz
+No corresponding file found for 2241_1117341842_ct.nii.gz
+No corresponding file found for 2347_1406539650_ct.nii.gz
+No corresponding file found for 2493_1737811408_ct.nii.gz
+No corresponding file found for 2289_1546144185_ct.nii.gz
+No corresponding file found for 2465_3393111926_ct.nii.gz
+No corresponding file found for 2623_1350376159_ct.nii.gz
+No corresponding file found for 2361_2930333975_ct.nii.gz
+No corresponding file found for 2566_1329019832_ct.nii.gz
+No corresponding file found for 2646_1816150506_ct.nii.gz
+Processing complete.
+Comparison completed.
+All steps have been successfully completed.

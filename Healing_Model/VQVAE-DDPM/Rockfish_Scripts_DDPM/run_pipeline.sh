@@ -2,10 +2,10 @@
 
 #SBATCH --account=rsteven1_gpu
 #SBATCH --job-name=healing_pipeline
-#SBATCH --nodes=1
-#SBATCH --partition=ica100
+#SBATCH --nodes=2
+#SBATCH --partition=a100
 #SBATCH --gpus-per-node=4
-#SBATCH --time=60:00:00
+#SBATCH --time=50:00:00
 #SBATCH --mem=100G
 #SBATCH --export=ALL
 

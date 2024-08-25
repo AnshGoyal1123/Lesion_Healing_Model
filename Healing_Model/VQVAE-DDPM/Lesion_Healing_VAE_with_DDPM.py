@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 from LesionedData import LesionedDataset
 from VQ_VAE_Implementation import VQVAE
-from DDPM_Implementation import DDPM, UNet3D  # Update this import to UNet3D
+from DDPM_Implementation import DDPM, UNet3D
 import torch.nn.functional as F
 import os
 import nibabel as nib
@@ -30,7 +30,7 @@ ddpm_model.to(device)
 # Prepare your dataset
 dataset_directory = '/home/agoyal19/Dataset/Dataset_Full/images'
 dataset = LesionedDataset(directory=dataset_directory)
-data_loader = DataLoader(dataset, batch_size=4, shuffle=False)
+data_loader = DataLoader(dataset, batch_size=1, shuffle=False)  # Reduced batch size to 1 to mitigate OOM
 
 # Directory to save the reconstructed images in NIfTI format
 save_directory = '/home/agoyal19/Dataset/Reconstructions/reconstructed_images_full_ddpm'
@@ -66,6 +66,9 @@ with torch.no_grad():
             original_name = filenames[j].replace('.nii.gz', '')  # Remove .nii.gz extension for new filename
             img_path = os.path.join(save_directory, f'{original_name}_reconstructed.nii.gz')
             nib.save(img_nii, img_path)
+
+        # Clear cache after each batch to manage memory
+        torch.cuda.empty_cache()
 
 # Compute average loss
 average_loss = total_loss / len(data_loader)
