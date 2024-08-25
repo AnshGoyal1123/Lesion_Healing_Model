@@ -7,18 +7,20 @@ class UNet3D(nn.Module):
         super(UNet3D, self).__init__()
         self.downs = nn.ModuleList()
         self.ups = nn.ModuleList()
+        self.pool = nn.MaxPool3d(kernel_size=2, stride=2)
 
         # Downsampling path
         for feature in features:
-            self.downs.append(self._block(in_channels, feature, kernel_size=3))
+            self.downs.append(self._block(in_channels, feature))
             in_channels = feature
 
         # Bottleneck
-        self.bottleneck = self._block(features[-1], features[-1] * 2, kernel_size=3)
+        self.bottleneck = self._block(features[-1], features[-1] * 2)
 
         # Upsampling path
         for feature in reversed(features):
-            self.ups.append(self._block(feature * 2, feature, kernel_size=3))
+            self.ups.append(nn.ConvTranspose3d(feature * 2, feature, kernel_size=2, stride=2))
+            self.ups.append(self._block(feature * 2, feature))
 
         self.final_conv = nn.Conv3d(features[0], out_channels, kernel_size=1)
 
@@ -27,28 +29,36 @@ class UNet3D(nn.Module):
         for down in self.downs:
             x = down(x)
             skip_connections.append(x)
+            x = self.pool(x)
 
         x = self.bottleneck(x)
         skip_connections = skip_connections[::-1]
 
-        for idx in range(0, len(self.ups), 1):
+        for idx in range(0, len(self.ups), 2):
             x = self.ups[idx](x)
-            x = torch.cat((x, skip_connections[idx]), dim=1)
+            skip_connection = skip_connections[idx // 2]
+
+            # Check and adjust if needed, to handle potential shape mismatch
+            if x.shape != skip_connection.shape:
+                x = nn.functional.interpolate(x, size=skip_connection.shape[2:])
+
+            concat_skip = torch.cat((skip_connection, x), dim=1)
+            x = self.ups[idx + 1](concat_skip)
 
         return self.final_conv(x)
 
-    def _block(self, in_channels, out_channels, kernel_size):
+    def _block(self, in_channels, out_channels):
         return nn.Sequential(
-            nn.Conv3d(in_channels, out_channels, kernel_size=kernel_size, padding=1),
+            nn.Conv3d(in_channels, out_channels, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv3d(out_channels, out_channels, kernel_size=kernel_size, padding=1),
+            nn.Conv3d(out_channels, out_channels, kernel_size=3, padding=1),
             nn.ReLU(inplace=True)
         )
 
 class DDPM(nn.Module):
     def __init__(self, betas, num_timesteps, model, device):
         super(DDPM, self).__init__()
-        self.betas = torch.tensor(betas, dtype=torch.float32, device=device)  # Consistent dtype
+        self.betas = torch.tensor(betas, dtype=torch.float32, device=device)
         self.num_timesteps = num_timesteps
         self.model = model
         self.device = device
@@ -72,7 +82,7 @@ class DDPM(nn.Module):
                 self.sqrt_one_minus_alphas_cumprod[t] * noise).float()
 
     def p_mean_variance(self, x, t, clip_denoised=True):
-        model_output = self.model(x).float()  # Call the 3D UNet model
+        model_output = self.model(x).float()
         posterior_mean = (
             self.sqrt_alphas_cumprod_prev[t] * x - self.betas[t] * model_output
         ) / torch.sqrt(1.0 - self.alphas_cumprod_prev[t])
