@@ -48,18 +48,18 @@ class UNet3D(nn.Module):
 class DDPM(nn.Module):
     def __init__(self, betas, num_timesteps, model, device):
         super(DDPM, self).__init__()
-        self.betas = torch.tensor(betas, device=device)  # Ensure betas is a tensor on the correct device
+        self.betas = torch.tensor(betas, dtype=torch.float32, device=device)  # Consistent dtype
         self.num_timesteps = num_timesteps
         self.model = model
         self.device = device
 
         self.alphas = 1.0 - self.betas
-        self.alphas_cumprod = torch.cumprod(self.alphas, dim=0).to(device)
-        self.alphas_cumprod_prev = torch.cat((torch.tensor([1.0], device=device), self.alphas_cumprod[:-1]), dim=0)
-        self.sqrt_alphas_cumprod = torch.sqrt(self.alphas_cumprod).to(device)
-        self.sqrt_one_minus_alphas_cumprod = torch.sqrt(1.0 - self.alphas_cumprod).to(device)
+        self.alphas_cumprod = torch.cumprod(self.alphas, dim=0).to(device).float()
+        self.alphas_cumprod_prev = torch.cat((torch.tensor([1.0], device=device), self.alphas_cumprod[:-1]), dim=0).float()
+        self.sqrt_alphas_cumprod = torch.sqrt(self.alphas_cumprod).to(device).float()
+        self.sqrt_one_minus_alphas_cumprod = torch.sqrt(1.0 - self.alphas_cumprod).to(device).float()
         self.posterior_variance = (self.betas * (1.0 - self.alphas_cumprod_prev) / 
-                                   (1.0 - self.alphas_cumprod)).to(device)
+                                   (1.0 - self.alphas_cumprod)).to(device).float()
 
     def q_sample(self, x_start, t, noise=None):
         if noise is None:
@@ -69,10 +69,10 @@ class DDPM(nn.Module):
         t = t.view(-1, 1, 1, 1, 1)
         
         return (self.sqrt_alphas_cumprod[t] * x_start + 
-                self.sqrt_one_minus_alphas_cumprod[t] * noise)
+                self.sqrt_one_minus_alphas_cumprod[t] * noise).float()
 
     def p_mean_variance(self, x, t, clip_denoised=True):
-        model_output = self.model(x)  # Call the 3D UNet model
+        model_output = self.model(x).float()  # Call the 3D UNet model
         posterior_mean = (
             self.sqrt_alphas_cumprod_prev[t] * x - self.betas[t] * model_output
         ) / torch.sqrt(1.0 - self.alphas_cumprod_prev[t])
@@ -85,7 +85,7 @@ class DDPM(nn.Module):
         return posterior_mean + torch.sqrt(posterior_variance) * noise
 
     def sample(self, shape):
-        x = torch.randn(shape, device=self.device)
+        x = torch.randn(shape, device=self.device).float()
         for t in reversed(range(self.num_timesteps)):
             x = self.p_sample(x, t)
         return x

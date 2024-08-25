@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 from HealthyData import HealthyDataset
 from VQ_VAE_Implementation import VQVAE
-from DDPM_Implementation import DDPM, UNet3D  # Use the new 3D UNet
+from DDPM_Implementation import DDPM, UNet3D
 import torch.nn.functional as F
 import numpy as np
 
@@ -18,7 +18,7 @@ vqvae_model.eval()
 
 # Initialize DDPM model
 ddpm_model = DDPM(
-    betas=np.linspace(1e-4, 0.02, 1000),
+    betas=np.linspace(1e-4, 0.02, 1000).astype(np.float32),
     num_timesteps=1000,
     model=UNet3D(in_channels=64, out_channels=64),  # Use the 3D UNet here
     device=device
@@ -38,22 +38,22 @@ num_epochs = 500
 for epoch in range(num_epochs):
     epoch_loss = 0
     for batch_data in data_loader:
-        images = batch_data['ct'].to(device).float()  # Ensure inputs are float32
+        images = batch_data['ct'].to(device).float()
         
         # Encode images to latent space using the VQ-VAE encoder
-        z = vqvae_model.encoder(images).float()  # Ensure latent vectors are float32
+        z = vqvae_model.encoder(images).float()
 
         # Sample random timesteps
         t = torch.randint(0, ddpm_model.num_timesteps, (z.size(0),), device=device).long()
         
         # Generate noisy versions of z
-        z_noisy = ddpm_model.q_sample(z, t)
+        z_noisy = ddpm_model.q_sample(z, t).float()
         
         # Predict the noise added
         predicted_noise = ddpm_model.model(z_noisy).float()
         
         # Compute the loss (how close the predicted noise is to the actual noise)
-        loss = F.mse_loss(predicted_noise, z_noisy - z)
+        loss = F.mse_loss(predicted_noise, z_noisy - z).float()
         
         # Backpropagation
         optimizer.zero_grad()
