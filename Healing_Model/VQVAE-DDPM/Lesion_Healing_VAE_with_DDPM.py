@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 from LesionedData import LesionedDataset
 from VQ_VAE_Implementation import VQVAE
-from DDPM_Implementation import DDPM, UNet
+from DDPM_Implementation import DDPM, UNet3D  # Update this import to UNet3D
 import torch.nn.functional as F
 import os
 import nibabel as nib
@@ -22,12 +22,10 @@ vqvae_model.eval()
 ddpm_model = DDPM(
     betas=np.linspace(1e-4, 0.02, 1000),
     num_timesteps=1000,
-    model=UNet(in_channels=64, out_channels=64),
+    model=UNet3D(in_channels=64, out_channels=64),  # Use the 3D UNet
     device=device
 )
-# No need to load pretrained weights for DDPM, initialize from scratch
 ddpm_model.to(device)
-ddpm_model.eval()
 
 # Prepare your dataset
 dataset_directory = '/home/agoyal19/Dataset/Dataset_Full/images'
@@ -46,7 +44,7 @@ with torch.no_grad():
         filenames = batch_data['filename']
 
         # Forward pass through the VQ-VAE encoder
-        z = vqvae_model.encoder(images)
+        z = vqvae_model.encoder(images).float()
 
         # Forward diffusion process through DDPM
         z_noisy = ddpm_model.q_sample(z, t=torch.randint(0, ddpm_model.num_timesteps, (z.size(0),), device=device).long())
@@ -55,7 +53,7 @@ with torch.no_grad():
         z_healed = ddpm_model.sample(z_noisy.shape)
 
         # Reconstruct the healed image using the VQ-VAE decoder
-        reconstructed_images = vqvae_model.decoder(z_healed)
+        reconstructed_images = vqvae_model.decoder(z_healed).float()
 
         # Calculate the reconstruction loss (MSE)
         reconstruction_loss = F.mse_loss(reconstructed_images, images)

@@ -38,10 +38,10 @@ num_epochs = 500
 for epoch in range(num_epochs):
     epoch_loss = 0
     for batch_data in data_loader:
-        images = batch_data['ct'].to(device).float()
+        images = batch_data['ct'].to(device).float()  # Ensure inputs are float32
         
         # Encode images to latent space using the VQ-VAE encoder
-        z = vqvae_model.encoder(images)
+        z = vqvae_model.encoder(images).float()  # Ensure latent vectors are float32
 
         # Sample random timesteps
         t = torch.randint(0, ddpm_model.num_timesteps, (z.size(0),), device=device).long()
@@ -50,7 +50,7 @@ for epoch in range(num_epochs):
         z_noisy = ddpm_model.q_sample(z, t)
         
         # Predict the noise added
-        predicted_noise = ddpm_model.model(z_noisy)
+        predicted_noise = ddpm_model.model(z_noisy).float()
         
         # Compute the loss (how close the predicted noise is to the actual noise)
         loss = F.mse_loss(predicted_noise, z_noisy - z)
