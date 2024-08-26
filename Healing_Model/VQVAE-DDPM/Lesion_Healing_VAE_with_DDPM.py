@@ -30,7 +30,7 @@ ddpm_model.to(device)
 # Prepare your dataset
 dataset_directory = '/home/agoyal19/Dataset/Dataset_Full/images'
 dataset = LesionedDataset(directory=dataset_directory)
-data_loader = DataLoader(dataset, batch_size=1, shuffle=False)  # Reduced batch size to 1 to mitigate OOM
+data_loader = DataLoader(dataset, batch_size=2, shuffle=False)  # Reduced batch size to 1 to mitigate OOM
 
 # Directory to save the reconstructed images in NIfTI format
 save_directory = '/home/agoyal19/Dataset/Reconstructions/reconstructed_images_full_ddpm'

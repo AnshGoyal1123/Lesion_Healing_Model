@@ -28,7 +28,7 @@ ddpm_model.to(device)
 # Prepare dataset of latent representations from healthy data
 dataset_directory = '/home/agoyal19/Dataset/control_data'
 dataset = HealthyDataset(directory=dataset_directory)
-data_loader = DataLoader(dataset, batch_size=1, shuffle=True)  # Reduced batch size to 1 to mitigate OOM
+data_loader = DataLoader(dataset, batch_size=2, shuffle=True)  # Reduced batch size to 1 to mitigate OOM
 
 # Optimizer
 optimizer = torch.optim.Adam(ddpm_model.parameters(), lr=1e-4)
