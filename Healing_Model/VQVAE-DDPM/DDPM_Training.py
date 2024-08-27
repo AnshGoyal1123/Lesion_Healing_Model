@@ -4,6 +4,7 @@ from HealthyData import HealthyDataset
 from VQ_VAE_Implementation import VQVAE
 from DDPM_Implementation import DDPM, UNet3D
 import torch.nn.functional as F
+import os
 import numpy as np
 
 # Device configuration
@@ -76,5 +77,6 @@ for epoch in range(num_epochs):
 
 # Save the trained DDPM model
 ddpm_save_path = "/home/agoyal19/My_Work/Healing_Model/DDPM_Models/ddpm_model.pth"
+os.makedirs(os.path.dirname(ddpm_save_path), exist_ok=True)  # Ensure the directory exists
 torch.save(ddpm_model.state_dict(), ddpm_save_path)
 print(f"DDPM model saved to {ddpm_save_path}")

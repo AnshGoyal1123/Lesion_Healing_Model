@@ -68,6 +68,7 @@ class DDPM(nn.Module):
         self.alphas_cumprod_prev = torch.cat((torch.tensor([1.0], device=device), self.alphas_cumprod[:-1]), dim=0).float()
         self.sqrt_alphas_cumprod = torch.sqrt(self.alphas_cumprod).to(device).float()
         self.sqrt_one_minus_alphas_cumprod = torch.sqrt(1.0 - self.alphas_cumprod).to(device).float()
+        self.sqrt_alphas_cumprod_prev = torch.sqrt(self.alphas_cumprod_prev).to(device).float()  # Ensure this is initialized
         self.posterior_variance = (self.betas * (1.0 - self.alphas_cumprod_prev) / 
                                    (1.0 - self.alphas_cumprod)).to(device).float()
 
